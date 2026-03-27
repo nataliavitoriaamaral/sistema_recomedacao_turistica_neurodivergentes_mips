@@ -25,10 +25,6 @@ Neste projeto em equipe, atuei diretamente no desenvolvimento do **Back-end em A
 * Estruturas de Dados (Vetores Paralelos, Alocação de Memória).
 
 ## Equipe de Desenvolvimento
-Projeto desenvolvido colaborativamente para a disciplina de Arquitetura e Organização de Computadores (UNIFESP):
-* **Natália Vitória Amaral do Val** 
-* **Caio Peternela de Souza** 
-* **João Vitor Mancio Chaves** 
-* **José Luiz de Oliveira Ferreira**
+Projeto desenvolvido colaborativamente para a disciplina de Arquitetura e Organização de Computadores (UNIFESP).
 
 *(A documentação completa, contendo o mapeamento de memória e arquitetura do software, está disponível no PDF anexado a este repositório).*
