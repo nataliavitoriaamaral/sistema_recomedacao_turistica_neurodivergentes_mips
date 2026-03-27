@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sistema de Recomendação Turística Inclusiva - Sul do Brasil</title>
+        <style>
+            /* Reset e Estilos Globais */
+            * {
+                box-sizing: border-box;
+            }
+    
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background-color: #f0f4f8;
+                padding: 20px;
+                margin: 0;
+                color: #34495e;
+            }
+    
+            /* Layout */
+            .container {
+                max-width: 600px;
+                margin: 0 auto;
+                background: white;
+                padding: 30px;
+                border-radius: 12px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            }
+    
+            h1 {
+                color: #2c3e50;
+                text-align: center;
+                margin-bottom: 30px;
+                font-size: 24px;
+            }
+    
+            h2 {
+                color: #16a085;
+                text-align: center;
+            }
+    
+            /* Formulário */
+            .pergunta {
+                margin-bottom: 20px;
+            }
+    
+            label {
+                display: block;
+                margin-bottom: 8px;
+                font-weight: 600;
+                color: #2c3e50;
+            }
+    
+            select {
+                width: 100%;
+                padding: 12px;
+                border: 1px solid #bdc3c7;
+                border-radius: 6px;
+                background-color: #fff;
+                font-size: 16px;
+                outline: none;
+                transition: border-color 0.3s;
+            }
+    
+            select:focus {
+                border-color: #3498db;
+            }
+    
+            /* Botões */
+            button {
+                width: 100%;
+                padding: 15px;
+                margin-top: 10px;
+                background-color: #3498db;
+                color: white;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+                font-size: 18px;
+                font-weight: bold;
+                transition: background 0.3s;
+            }
+    
+            button:hover {
+                background-color: #2980b9;
+            }
+    
+            .btn-restart {
+                background-color: #95a5a6;
+                margin-top: 20px;
+            }
+
+            .btn-restart:hover {
+                background-color: #7f8c8d;
+            }
+
+            /* Área de Resultado */
+            #loading {
+                text-align: center;
+                margin-top: 30px;
+            }
+
+            #loading p {
+                font-size: 18px;
+                color: #555;
+            }
+
+            #resultado-container {
+                margin-top: 30px;
+                border-top: 1px solid #eee;
+                padding-top: 20px;
+            }
+
+            #resultado-texto {
+                background-color: #e8f6f3;
+                color: #16a085;
+                padding: 20px;
+                border-left: 6px solid #1abc9c;
+                border-radius: 6px;
+                white-space: pre-wrap; /* Mantém a formatação original do MIPS */
+                font-family: 'Courier New', Courier, monospace; /* Fonte monoespaçada para alinhar texto */
+                font-weight: bold;
+                font-size: 14px;
+                line-height: 1.5;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>🌍 Sistema de Recomendação Turística Inclusiva - Sul do Brasil</h1>
+            <div id="formulario">
+                <div class="pergunta">
+                    <label for="estado">1. Escolha o Estado de Destino:</label>
+                    <select id="estado">
+                        <option value="1">Paraná (PR)</option>
+                        <option value="2">Santa Catarina (SC)</option>
+                        <option value="3">Rio Grande do Sul (RS)</option>
+                    </select>
+                </div>
+                <div class="pergunta">
+                    <label for="custo">2. Qual o seu perfil de orçamento?</label>
+                    <select id="custo">
+                        <option value="1">Econômico</option>
+                        <option value="2">Conforto/Luxo</option>
+                    </select>
+                </div>
+                <div class="pergunta">
+                    <label for="atividade">3. O que você prefere fazer?</label>
+                    <select id="atividade">
+                        <option value="1">Natureza</option>
+                        <option value="2">Museu</option>
+                        <option value="3">Diversão</option>
+                        <option value="4">Praia</option>
+                    </select>
+                </div>
+                <div class="pergunta">
+                    <label for="sensorial">4. Perfil Sensorial (Autismo):</label>
+                    <select id="sensorial">
+                        <option value="1">Calmo (Silencioso/Tranquilo)</option>
+                        <option value="2">Agitado (Movimentado)</option>
+                    </select>
+                </div>
+                <div class="pergunta">
+                    <label for="seletividade">5. Possui Seletividade Alimentar?</label>
+                    <select id="seletividade">
+                        <option value="1">Sim (Prefiro comidas simples)</option>
+                        <option value="0">Não (Sem restrições)</option>
+                    </select>
+                </div>
+                <button onclick="gerarRoteiro()">Gerar Roteiro Personalizado</button>
+            </div>
+            <div id="loading" style="display:none;">
+                <p>Consultando o oráculo do MIPS... 🤖</p>
+            </div>
+            <div id="resultado-container" style="display: none;">
+                <h2>🎉 Seu Roteiro Ideal</h2>
+                <div id="resultado-texto"></div>
+                <button class="btn-restart" onclick="location.reload()">Fazer nova consulta</button>
+            </div>
+        </div>
+        <script>
+            async function gerarRoteiro() {
+                // 1. Coleta os dados do formulário
+                const dados = {
+                    estado: parseInt(document.getElementById('estado').value),
+                    custo: parseInt(document.getElementById('custo').value),
+                    atividade: parseInt(document.getElementById('atividade').value),
+                    sensorial: parseInt(document.getElementById('sensorial').value),
+                    seletividade: parseInt(document.getElementById('seletividade').value)
+                };
+                // 2. Manipula a Interface
+                document.getElementById('formulario').style.display = 'none';
+                document.getElementById('loading').style.display = 'block';
+
+                const resDiv = document.getElementById('resultado-texto');
+                const containerDiv = document.getElementById('resultado-container');
+
+                try {
+                    // 3. Chama o Middleware Node.js
+                    const response = await fetch('/roteiro', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(dados)
+                    });
+
+                    const json = await response.json();
+
+                    // 4. Exibe o Resultado
+                    document.getElementById('loading').style.display = 'none';
+                    containerDiv.style.display = 'block';
+
+                    if (json.sucesso) {
+                        resDiv.innerText = json.resultado;
+                        resDiv.style.color = "#16a085"; 
+                        resDiv.style.borderColor = "#1abc9c";
+                    } else {
+                        resDiv.innerText = "Erro ao processar: " + json.erro;
+                        resDiv.style.color = "#c0392b";
+                        resDiv.style.borderColor = "#e74c3c";
+                    }
+                } catch (error) {
+                    document.getElementById('loading').style.display = 'none';
+                    containerDiv.style.display = 'block';
+                    resDiv.innerText = "Erro de conexão";
+                    resDiv.style.color = "#c0392b";
+                }
+            }
+        </script>
+    </body>
+</html>
